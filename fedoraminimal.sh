@@ -39,3 +39,7 @@ sudo systemctl enable sddm
 
 # Grub
 sudo grub2-editenv - set menu_auto_hide=1
+
+# Install Drivers
+chmod +x drivers.sh
+./drivers.sh
