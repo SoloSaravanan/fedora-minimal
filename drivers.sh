@@ -3,13 +3,13 @@
 # Intel driver 
 
 if lspci | grep -Ei 'intel|intel corporation' > /dev/null 2>&1; then
-    echo "Intel driver found"
+    echo -e "\033[32mIntel driver found\033[0m"
     sudo dnf install alsa-sof-firmware intel-gpu-firmware intel-media-driver -y
 
 # AMD driver
 
 elif lspci | grep -Ei 'amd|amd corporation' > /dev/null 2>&1; then
-    echo "AMD driver found"
+    echo -e "\033[32mAMD driver found\033[0m"
     sudo dnf install amd-gpu-firmware amd-ucode-firmware -y
 
     # AMD Mesa drivers
@@ -25,7 +25,7 @@ fi
 NVIDIA_VERSION="565.77"
 
 if lspci | grep -Ei 'nvidia|nvidia corporation' > /dev/null 2>&1; then
-    echo "NVIDIA driver found"
+    echo -e "\033[32mNVIDIA driver found\033[0m"
     sudo dnf install nvidia-gpu-firmware -y
 
     # Create NVIDIA modprobe configuration
