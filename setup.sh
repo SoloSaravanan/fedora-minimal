@@ -41,6 +41,6 @@ sudo systemctl enable sddm
 sudo grub2-editenv - set menu_auto_hide=1
 
 # Install Drivers
-sudo dnf install pciutils
+sudo dnf -y install pciutils
 chmod +x drivers.sh
 ./drivers.sh

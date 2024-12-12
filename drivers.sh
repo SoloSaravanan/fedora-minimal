@@ -4,26 +4,28 @@
 
 if lspci | grep -Ei 'intel|intel corporation' > /dev/null 2>&1; then
     echo -e "\033[32mIntel driver found\033[0m"
-    sudo dnf install alsa-sof-firmware intel-gpu-firmware intel-media-driver -y
+    sudo dnf -y install alsa-firmware alsa-sof-firmware intel-gpu-firmware intel-media-driver
+    sudo dnf -y remove amd-gpu-firmware amd-ucode-firmware
 
 # AMD driver
 
 elif lspci | grep -Ei 'amd|amd corporation' > /dev/null 2>&1; then
     echo -e "\033[32mAMD driver found\033[0m"
-    sudo dnf install amd-gpu-firmware amd-ucode-firmware -y
+    sudo dnf -y install amd-gpu-firmware amd-ucode-firmware
 
     # AMD Mesa drivers
-    sudo dnf swap mesa-va-drivers mesa-va-drivers-freeworld -y
-    sudo dnf swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld -y
-    sudo dnf swap mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686 -y
-    sudo dnf swap mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686 -y
+    sudo dnf -y swap mesa-va-drivers mesa-va-drivers-freeworld
+    sudo dnf -y swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
+    sudo dnf -y swap mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686
+    sudo dnf -y swap mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
 fi
 
 # NVIDIA driver
 
 if lspci | grep -Ei 'nvidia|nvidia corporation' > /dev/null 2>&1; then
     echo -e "\033[32mNVIDIA driver found\033[0m"
-    sudo dnf install nvidia-gpu-firmware akmod-nvidia-open xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-cuda-libs vulkan libva-nvidia-driver.{i686,x86_64} nvidia-vaapi-driver libva-utils vdpauinfo egl-gbm -y
+    sudo dnf -y install rpmfusion-nonfree-release-tainted
+    sudo dnf -y install nvidia-gpu-firmware akmod-nvidia-open xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-cuda-libs vulkan libva-nvidia-driver.{i686,x86_64} nvidia-vaapi-driver libva-utils vdpauinfo egl-gbm.{i686,x86_64}
 
     # Create NVIDIA modprobe configuration
     sudo tee /etc/modprobe.d/nvidia.conf > /dev/null << 'EOF'
@@ -37,7 +39,7 @@ options nvidia NVreg_DynamicPowerManagement=0x02
 EOF
 
     #Nvidia Suspend
-    sudo dnf install xorg-x11-drv-nvidia-power
+    sudo dnf -y install xorg-x11-drv-nvidia-power
     sudo systemctl enable nvidia-{suspend,resume,hibernate}
     sudo cp /usr/share/dbus-1/system.d/nvidia-dbus.conf /etc/dbus-1/system.d/
     sudo systemctl enable --now nvidia-powerd
