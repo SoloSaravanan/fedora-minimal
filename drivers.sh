@@ -36,6 +36,7 @@ options nvidia NVreg_RegistryDwords="OverrideMaxPerf=0x1"
 options nvidia NVreg_PreserveVideoMemoryAllocations=1
 options nvidia NVreg_EnableS0ixPowerManagement=1
 options nvidia NVreg_EnableGpuFirmware=0
+options nvidia NVreg_DynamicPowerManagement=0x02
 EOF
     # Download latest NVIDIA driver
     cd /tmp
