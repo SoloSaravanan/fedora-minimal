@@ -4,6 +4,7 @@
 sudo dnf config-manager setopt installonly_limit=2
 sudo dnf config-manager setopt max_parallel_downloads=15
 sudo dnf config-manager setopt fastestmirror=1
+sudo dnf config-manager setopt defaultyes=True
 
 sudo dnf -y upgrade --refresh
 
