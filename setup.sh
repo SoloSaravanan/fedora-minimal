@@ -25,7 +25,8 @@ sudo dnf -y install ark
 sudo dnf -y install mt7xxx-firmware realtek-firmware
 
 # Fonts
-sudo dnf -y group install fonts
+#sudo dnf -y group install fonts
+sudo dnf install -y default-fonts-core-emoji default-fonts-core-math default-fonts-core-mono default-fonts-core-serif default-fonts-other-serif
 
 # Multimedia
 sudo dnf -y swap ffmpeg-free ffmpeg --allowerasing
