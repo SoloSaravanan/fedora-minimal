@@ -24,25 +24,53 @@ fi
 
 if lspci | grep -Ei 'nvidia|nvidia corporation' > /dev/null 2>&1; then
     echo -e "\033[32mNVIDIA driver found\033[0m"
-    sudo dnf -y install rpmfusion-nonfree-release-tainted
-    sudo dnf -y install nvidia-gpu-firmware akmod-nvidia-open xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-cuda-libs vulkan libva-nvidia-driver.{i686,x86_64} nvidia-vaapi-driver libva-utils vdpauinfo egl-gbm.{i686,x86_64}
+    #sudo dnf -y install rpmfusion-nonfree-release-tainted
+    #sudo dnf -y install nvidia-gpu-firmware akmod-nvidia-open xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-cuda-libs vulkan libva-nvidia-driver.{i686,x86_64} nvidia-vaapi-driver libva-utils vdpauinfo egl-gbm.{i686,x86_64}
+
+    ## Get new 570 beta driver from cuda repos
+    sudo dnf -y config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
+    sudo dnf -y install cuda-drivers --allowerasing
+    sudo dnf -y install nvidia-driver kmod-nvidia-latest-dkms libva-utils libva-nvidia-driver.{i686,x86_64} nvidia-settings nvidia-persistenced
 
     # Create NVIDIA modprobe configuration
     sudo tee /etc/modprobe.d/nvidia.conf > /dev/null << 'EOF'
+blacklist nouveau
+options nouveau modeset=0
 options nvidia-drm modeset=1 fbdev=1
-options nvidia NVreg_UsePageAttributeTable=1
-options nvidia NVreg_RegistryDwords="OverrideMaxPerf=0x1"
-options nvidia NVreg_PreserveVideoMemoryAllocations=1
-options nvidia NVreg_EnableS0ixPowerManagement=1
 options nvidia NVreg_EnableGpuFirmware=0
+options nvidia NVreg_PreserveVideoMemoryAllocations=1
+options nvidia NVreg_TemporaryFilePath=/var/tmp
 options nvidia NVreg_DynamicPowerManagement=0x02
+options nvidia NVreg_UsePageAttributeTable=1
+options nvidia NVreg_EnableS0ixPowerManagement=1
 EOF
 
-    #Nvidia Suspend
-    sudo dnf -y install xorg-x11-drv-nvidia-power
+    # Create NVIDIA udev rules
+    sudo tee /lib/udev/rules.d/80-nvidia-pm.rules > /dev/null << 'EOF'
+# Remove NVIDIA USB xHCI Host Controller devices, if present
+ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{remove}="1"
+
+# Remove NVIDIA USB Type-C UCSI devices, if present
+ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{remove}="1"
+
+# Remove NVIDIA Audio devices, if present
+ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{remove}="1"
+
+# Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
+ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="auto"
+ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="auto"
+
+# Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
+ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
+ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
+EOF
+
+    #Enable Nvidia suspend, dynamic boost, persistence
+    #sudo dnf -y install xorg-x11-drv-nvidia-power
     sudo systemctl enable nvidia-{suspend,resume,hibernate}
     sudo cp /usr/share/dbus-1/system.d/nvidia-dbus.conf /etc/dbus-1/system.d/
     sudo systemctl enable --now nvidia-powerd
+    sudo systemctl enable --now nvidia-persistenced.service
 
     echo -e "\033[32mNVIDIA driver installed successfully\033[0m"
     echo "To verify NVIDIA kernel module installation, please run: modinfo -F version nvidia"
