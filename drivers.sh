@@ -81,6 +81,7 @@ EOF
 #NVIDIA_VERSION="565.77"
 
     # Download latest NVIDIA driver
+    #sudo dnf -y install wget acpid pkgconfig kernel-headers kernel-devel egl-wayland dkms vdpauinfo libva-utils libva-nvidia-driver.{i686,x86_64} libglvnd-devel --setopt=install_weak_deps=false
     #cd /tmp
     #wget "https://us.download.nvidia.com/XFree86/Linux-x86_64/${NVIDIA_VERSION}/NVIDIA-Linux-x86_64-${NVIDIA_VERSION}.run"
 
