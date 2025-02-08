@@ -41,7 +41,8 @@ options nvidia-drm modeset=1 fbdev=1
 options nvidia NVreg_EnableGpuFirmware=0
 options nvidia NVreg_PreserveVideoMemoryAllocations=1
 options nvidia NVreg_TemporaryFilePath=/var/tmp
-options nvidia NVreg_DynamicPowerManagement=0x02
+options nvidia NVreg_DynamicPowerManagement=0x03
+options nvidia NVreg_DynamicPowerManagementVideoMemoryThreshold=0
 options nvidia NVreg_UsePageAttributeTable=1
 options nvidia NVreg_EnableS0ixPowerManagement=1
 EOF
