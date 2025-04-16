@@ -29,9 +29,9 @@ if lspci | grep -Ei 'nvidia|nvidia corporation' > /dev/null 2>&1; then
     #sudo dnf -y install nvidia-gpu-firmware akmod-nvidia-open xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-cuda-libs vulkan libva-nvidia-driver.{i686,x86_64} nvidia-vaapi-driver libva-utils vdpauinfo egl-gbm.{i686,x86_64}
 
     ## Get new 570 beta driver from cuda repos
-    sudo dnf -y config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
-    sudo dnf -y install cuda-drivers --allowerasing
-    sudo dnf -y install nvidia-driver kmod-nvidia-latest-dkms libva-utils libva-nvidia-driver.{i686,x86_64} nvidia-settings nvidia-persistenced
+    #sudo dnf -y config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
+    #sudo dnf -y install cuda-drivers --allowerasing
+    #sudo dnf -y install nvidia-driver kmod-nvidia-latest-dkms libva-utils libva-nvidia-driver.{i686,x86_64} nvidia-settings nvidia-persistenced
 
     # Create NVIDIA modprobe configuration
     sudo tee /etc/modprobe.d/nvidia.conf > /dev/null << 'EOF'
@@ -66,6 +66,12 @@ ACTION=="bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200
 ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", TEST=="power/control", ATTR{power/control}="on"
 ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
 EOF
+
+    sudo dnf -y config-manager addrepo --from-repofile=https://negativo17.org/repos/fedora-nvidia.repo
+    sudo dnf -y install nvidia-driver dkms-nvidia nvidia-driver-libs.i686 nvidia-settings nvidia-driver-cuda
+    sudo sed -i -e 's/kernel-open$/kernel/g' /etc/nvidia/kernel.conf
+    sudo dkms build -m nvidia/570.133.07 --force
+    sudo dkms install -m nvidia/570.133.07 --force
 
     #Enable Nvidia suspend, dynamic boost, persistence
     #sudo dnf -y install xorg-x11-drv-nvidia-power
