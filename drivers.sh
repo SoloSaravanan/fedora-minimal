@@ -67,6 +67,7 @@ ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0300
 ACTION=="unbind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", TEST=="power/control", ATTR{power/control}="on"
 EOF
 
+#Negativo's NVIDIA drivers
     sudo dnf -y config-manager addrepo --from-repofile=https://negativo17.org/repos/fedora-nvidia.repo
     sudo dnf -y install nvidia-driver dkms-nvidia nvidia-driver-libs.i686 nvidia-settings nvidia-driver-cuda
     sudo sed -i -e 's/kernel-open$/kernel/g' /etc/nvidia/kernel.conf
