@@ -31,7 +31,7 @@ if lspci | grep -Ei 'nvidia|nvidia corporation' > /dev/null 2>&1; then
     ## Get new 570 beta driver from cuda repos
     #sudo dnf -y config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
     #sudo dnf -y install cuda-drivers --allowerasing
-    #sudo dnf -y install nvidia-driver kmod-nvidia-latest-dkms libva-utils libva-nvidia-driver.{i686,x86_64} nvidia-settings nvidia-persistenced
+    #sudo dnf -y install nvidia-driver kmod-nvidia-latest-dkms libva-utils libva-nvidia-driver.{i686,x86_64} nvidia-settings
 
     # Create NVIDIA modprobe configuration
     sudo tee /etc/modprobe.d/nvidia.conf > /dev/null << 'EOF'
@@ -79,7 +79,6 @@ EOF
     sudo systemctl enable nvidia-{suspend,resume,hibernate}
     sudo cp /usr/share/dbus-1/system.d/nvidia-dbus.conf /etc/dbus-1/system.d/
     sudo systemctl enable --now nvidia-powerd
-    sudo systemctl enable --now nvidia-persistenced.service
 
     echo -e "\033[32mNVIDIA driver installed successfully\033[0m"
     echo "To verify NVIDIA kernel module installation, please run: modinfo -F version nvidia"
