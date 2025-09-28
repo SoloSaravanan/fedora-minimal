@@ -31,22 +31,16 @@ options nouveau modeset=0
 options nvidia-drm modeset=1 fbdev=1
 options nvidia NVreg_UsePageAttributeTable=1 \
     NVreg_InitializeSystemMemoryAllocations=0 \
-    NVreg_DynamicPowerManagement=0x02 \
-    NVreg_RegistryDwords=RMIntrLockingMode=1 \
-    NVreg_EnableS0ixPowerManagement=1
+    NVreg_DynamicPowerManagement=0x03
 EOF
 
     # Create NVIDIA udev rules
     sudo tee /lib/udev/rules.d/71-nvidia.rules > /dev/null << 'EOF'
 # Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind
-ACTION=="add|bind", SUBSYSTEM=="pci", DRIVERS=="nvidia", \
-    ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", \
-    TEST=="power/control", ATTR{power/control}="auto"
+ACTION=="add|bind", SUBSYSTEM=="pci", DRIVERS=="nvidia", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", TEST=="power/control", ATTR{power/control}="auto"
 
 # Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind
-ACTION=="remove|unbind", SUBSYSTEM=="pci", DRIVERS=="nvidia", \
-    ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", \
-    TEST=="power/control", ATTR{power/control}="on"
+ACTION=="remove|unbind", SUBSYSTEM=="pci", DRIVERS=="nvidia", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", TEST=="power/control", ATTR{power/control}="on"
 EOF
 
     # Add NVIDIA driver repository
@@ -60,7 +54,7 @@ gpgkey=https://solosaravanan.github.io/nvidia-driver/pubkey.gpg
 EOF
 
     #  Install NVIDIA driver
-    sudo dnf install -y nvidia-cfg nvidia-common nvidia-cuda nvidia-driver nvidia-egl nvidia-egl-gbm nvidia-egl-wayland nvidia-gbm nvidia-gles nvidia-glx nvidia-gpu-firmware nvidia-modprobe nvidia-modules-open nvidia-ngx
+    sudo dnf install -y nvidia-cfg nvidia-common nvidia-cuda nvidia-driver nvidia-egl nvidia-egl-gbm nvidia-egl-wayland nvidia-gbm nvidia-gles nvidia-glx nvidia-gpu-firmware nvidia-modprobe nvidia-modules-open nvidia-ngx nvidia-opencl nvidia-powerd nvidia-security nvidia-settings nvidia-smi nvidia-vdpau nvidia-video nvidia-vision
 
     #Enable Nvidia suspend, dynamic boost
     sudo systemctl enable nvidia-{suspend,resume,hibernate,suspend-then-hibernate}
