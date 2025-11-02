@@ -27,6 +27,7 @@ if lspci | grep -Ei 'nvidia|nvidia corporation' > /dev/null 2>&1; then
     # Create NVIDIA modprobe configuration
     sudo tee /etc/modprobe.d/nvidia.conf > /dev/null << 'EOF'
 blacklist nouveau
+blacklist nova
 options nouveau modeset=0
 options nvidia-drm modeset=1 fbdev=1
 options nvidia NVreg_UsePageAttributeTable=1 \

@@ -17,7 +17,7 @@ sudo dnf -y upgrade --refresh
 sudo dnf -y install plasma-workspace-wayland sddm-wayland-plasma sddm-breeze plasma-nm plasma-pa --setopt=install_weak_deps=false
 
 # KDE tools
-sudo dnf -y install bash-completion konsole firefox gwenview dolphin ffmpegthumbs kate spectacle kde-gtk-config kscreen sddm-kcm firewall-config NetworkManager-wifi NetworkManager-bluetooth bluedevil upower tuned-ppd plasma-milou --setopt=install_weak_deps=false
+sudo dnf -y install bash-completion konsole firefox gwenview dolphin ffmpegthumbs kate spectacle kde-gtk-config kscreen sddm-kcm firewall-config NetworkManager-wifi NetworkManager-bluetooth bluedevil upower tuned-ppd plasma-milou switcheroo-control kwalletmanager5 --setopt=install_weak_deps=false
 sudo dnf -y install ark
 
 # Firmwares
