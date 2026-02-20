@@ -14,10 +14,10 @@ sudo dnf -y update @core
 sudo dnf -y upgrade --refresh
 
 # KDE
-sudo dnf -y install plasma-workspace-wayland sddm-wayland-plasma sddm-breeze plasma-nm plasma-pa --setopt=install_weak_deps=false
+sudo dnf -y install plasma-workspace-wayland plasma-login-manager plasma-nm plasma-pa --setopt=install_weak_deps=false
 
 # KDE tools
-sudo dnf -y install bash-completion konsole firefox gwenview dolphin ffmpegthumbs kate spectacle kde-gtk-config kscreen sddm-kcm firewall-config NetworkManager-wifi NetworkManager-bluetooth bluedevil upower tuned-ppd plasma-milou switcheroo-control kwalletmanager5 --setopt=install_weak_deps=false
+sudo dnf -y install bash-completion konsole firefox gwenview dolphin ffmpegthumbs kate spectacle kde-gtk-config kscreen firewall-config NetworkManager-wifi NetworkManager-bluetooth bluedevil upower tuned-ppd plasma-milou switcheroo-control kwalletmanager --setopt=install_weak_deps=false
 sudo dnf -y install ark
 
 # Firmwares
@@ -34,9 +34,9 @@ sudo dnf -y group install multimedia --setopt="install_weak_deps=False" --exclud
 sudo systemctl --user --now enable wireplumber.service
 sudo systemctl --user --now enable pipewire
 
-# SDDM
+# Plasma login manager
 sudo systemctl set-default graphical.target
-sudo systemctl enable sddm
+sudo systemctl enable plasmalogin
 
 # Grub
 sudo grub2-editenv - set menu_auto_hide=1
