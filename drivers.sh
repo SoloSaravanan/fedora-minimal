@@ -4,7 +4,7 @@
 
 if lspci | grep -Ei 'intel|intel corporation' > /dev/null 2>&1; then
     echo -e "\033[32mIntel driver found\033[0m"
-    sudo dnf -y install alsa-sof-firmware intel-gpu-firmware intel-media-driver
+    sudo dnf -y install alsa-sof-firmware intel-gpu-firmware intel-media-driver microcode_ctl
     sudo dnf -y install mesa-va-drivers mesa-vdpau-drivers mesa-vulkan-drivers
     sudo dnf -y remove amd-gpu-firmware amd-ucode-firmware
 
